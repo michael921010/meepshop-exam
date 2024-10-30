@@ -1,18 +1,36 @@
-import { Box, Container, Typography, Link } from "@mui/material";
-import { Image } from "@/components/common";
-import logo from "@/assets/react.svg";
+import { useCallback, useState } from "react";
+import { Box, Stack, Container, Divider } from "@mui/material";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import ImageList from "./ImageList";
+import DraggableText from "./DraggableText";
+import DraggableImage from "./DraggableImage";
+import { Layer as DragLayer } from "@/components/draggable";
 
 export default function App() {
-  return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Link href="https://vite.dev" target="_blank">
-          <Image src={logo} alt="Vite logo" />
-        </Link>
+  const [model, setModel] = useState({});
 
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Material UI Vite.js example
-        </Typography>
+  const handleMove = useCallback((type) => {
+    setModel((_model) => ({ ..._model, [type]: "" }));
+  }, []);
+
+  return (
+    <Container>
+      <Box sx={{ my: 4 }}>
+        <DndProvider backend={HTML5Backend}>
+          <DragLayer />
+
+          <Box p={2} sx={{ borderRadius: 2, border: "1px solid", height: 400 }}>
+            <ImageList model={model} onMove={handleMove} />
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <Stack direction="row" alignItems="center" justifyContent="center" spacing={2}>
+            <DraggableText />
+            <DraggableImage />
+          </Stack>
+        </DndProvider>
       </Box>
     </Container>
   );
