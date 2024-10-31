@@ -14,6 +14,14 @@ export default function App() {
     setModel((_model) => ({ ..._model, [type]: "" }));
   }, []);
 
+  const handleRemove = useCallback((type) => {
+    setModel((_model) => ({ ..._model, [type]: undefined }));
+  }, []);
+
+  const handleChange = useCallback((type, value) => {
+    setModel((_model) => ({ ..._model, [type]: value }));
+  }, []);
+
   return (
     <Container>
       <Box sx={{ my: 4 }}>
@@ -21,7 +29,7 @@ export default function App() {
           <DragLayer />
 
           <Box p={2} sx={{ borderRadius: 2, border: "1px solid", height: 400 }}>
-            <ImageList model={model} onMove={handleMove} />
+            <ImageList model={model} onMove={handleMove} onRemove={handleRemove} onChange={handleChange} />
           </Box>
 
           <Divider sx={{ my: 2 }} />
