@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { Box, Stack, TextField, ButtonBase, styled, Typography } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ImageIcon from "@mui/icons-material/Image";
-import { useDrop, useDragLayer } from "react-dnd";
+import { useDrop } from "react-dnd";
 import { ItemTypes } from "@/configs/drag-items";
 import { ImageModel, TextModel } from "@/modules/model";
 import { Image } from "@/components/common";
@@ -107,9 +107,17 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
             spacing={2}
             sx={{ borderRadius: 2, border: "solid 1px", borderColor: "grey.200" }}
           >
-            <Box width={ImageModel._width} height={ImageModel._height} sx={{ borderRadius: 1, bgcolor: "grey.400" }} />
+            <Box
+              width={ImageModel._width}
+              height={ImageModel._height}
+              sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
+            />
 
-            <Box width={TextModel._width} height={TextModel._height} sx={{ borderRadius: 1, bgcolor: "grey.400" }} />
+            <Box
+              width={TextModel._width}
+              height={TextModel._height}
+              sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
+            />
           </Stack>
         )}
 
@@ -155,7 +163,7 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
               <Box
                 width={ImageModel._width}
                 height={ImageModel._height}
-                sx={{ borderRadius: 1, bgcolor: "grey.400" }}
+                sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
               />
             )}
 
@@ -173,7 +181,11 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
                 />
               </Box>
             ) : (
-              <Box width={TextModel._width} height={TextModel._height} sx={{ borderRadius: 1, bgcolor: "grey.400" }} />
+              <Box
+                width={TextModel._width}
+                height={TextModel._height}
+                sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
+              />
             )}
           </Stack>
         )}
