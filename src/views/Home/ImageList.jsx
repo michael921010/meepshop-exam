@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { Box, Stack, TextField, ButtonBase, styled, Typography } from "@mui/material";
+import { Box, Stack, TextField, ButtonBase, styled } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ImageIcon from "@mui/icons-material/Image";
@@ -7,6 +7,7 @@ import { useDrop } from "react-dnd";
 import { ItemTypes } from "@/configs/drag-items";
 import { ImageModel, TextModel } from "@/modules/model";
 import { Image } from "@/components/common";
+import { Card, CardImage, CardText } from "./Card";
 
 const IconButton = styled(MuiIconButton)(({ theme }) => ({
   position: "absolute",
@@ -64,71 +65,48 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
   );
 
   return (
-    <Box ref={dropRef} width="100%" height="100%">
+    <Box
+      ref={dropRef}
+      width="100%"
+      height={400}
+      p={2}
+      sx={{
+        borderRadius: 2,
+        boxShadow: "0 0 0 1px",
+        transition: (theme) =>
+          `${theme.transitions.create(["background-color"], {
+            duration: 300,
+          })}`,
+
+        ...(isOver &&
+          canDrop && {
+            bgcolor: "#99999994",
+          }),
+      }}
+    >
       <Stack direction="row" spacing={2}>
         {images?.map((_card, i) => {
           const { image, text } = _card;
 
           return (
-            <Stack
-              key={i}
-              p={1}
-              direction="column"
-              alignItems="center"
-              spacing={2}
-              sx={{ borderRadius: 2, border: "solid 1px", borderColor: "grey.200" }}
-            >
-              {image?.enabled && (
-                <Box width={image?.width} height={image?.height}>
-                  <Image
-                    alt=""
-                    src={image?.src}
-                    width="100%"
-                    height="100%"
-                    sx={{ width: "100%", height: "100%", objectFit: "contain" }}
-                  />
-                </Box>
-              )}
+            <Card key={i}>
+              {image?.enabled && <CardImage width={image?.width} height={image?.height} src={image?.src} enabled />}
 
-              {text?.enabled && (
-                <Box width={text?.width} height={text?.height}>
-                  <Typography component="p">{text?.src ?? ""}</Typography>
-                </Box>
-              )}
-            </Stack>
+              {text?.enabled && <CardText width={text?.width} height={text?.height} src={text?.src} enabled />}
+            </Card>
           );
         })}
 
         {!model?.image?.enabled && !model?.text?.enabled && isOver && canDrop && (
-          <Stack
-            p={1}
-            direction="column"
-            alignItems="center"
-            spacing={2}
-            sx={{ borderRadius: 2, border: "solid 1px", borderColor: "grey.200" }}
-          >
-            <Box
-              width={ImageModel._width}
-              height={ImageModel._height}
-              sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
-            />
+          <Card>
+            <CardImage width={ImageModel._width} height={ImageModel._height} />
 
-            <Box
-              width={TextModel._width}
-              height={TextModel._height}
-              sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
-            />
-          </Stack>
+            <CardText width={TextModel._width} height={TextModel._height} />
+          </Card>
         )}
 
         {(model?.image?.enabled || model?.text?.enabled) && (
-          <Stack
-            p={1}
-            direction="column"
-            alignItems="center"
-            spacing={2}
-            sx={{ borderRadius: 2, border: "solid 1px", borderColor: "grey.200" }}
-          >
+          <Card>
             {model?.image?.enabled ? (
               <Box width={model?.image?.width} height={model?.image?.height} position="relative">
                 <IconButton onClick={handleRemove(ItemTypes.IMAGE)}>
@@ -151,7 +129,7 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
                   ) : (
                     <Image
                       alt=""
-                      src={URL.createObjectURL(model?.image?.src)}
+                      src={model?.image?.src}
                       width="100%"
                       height="100%"
                       sx={{ width: "100%", height: "100%", objectFit: "contain" }}
@@ -160,11 +138,7 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
                 </ButtonBase>
               </Box>
             ) : (
-              <Box
-                width={ImageModel._width}
-                height={ImageModel._height}
-                sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
-              />
+              <CardImage width={ImageModel._width} height={ImageModel._height} />
             )}
 
             {model?.text?.enabled ? (
@@ -181,13 +155,9 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
                 />
               </Box>
             ) : (
-              <Box
-                width={TextModel._width}
-                height={TextModel._height}
-                sx={{ borderRadius: 1, bgcolor: "secondary.light" }}
-              />
+              <CardText width={TextModel._width} height={TextModel._height} />
             )}
-          </Stack>
+          </Card>
         )}
       </Stack>
     </Box>

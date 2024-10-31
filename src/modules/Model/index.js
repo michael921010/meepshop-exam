@@ -29,7 +29,7 @@ export class TextModel extends Model {
   }
 }
 
-export class Card {
+export class CardModel {
   constructor(props) {
     this.text = props?.text ?? new TextModel();
     this.image = props?.image ?? new ImageModel();
