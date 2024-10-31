@@ -1,9 +1,15 @@
 import { Stack } from "@mui/material";
 import TranslateIcon from "@mui/icons-material/Translate";
 
-const TextComponent = () => {
+const TextComponent = ({ sx }) => {
   return (
-    <Stack p={2} alignItems="center" justifyContent="center" sx={{ borderRadius: 1, border: "1px solid" }}>
+    <Stack
+      width="100%"
+      height="100%"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ ...sx, borderRadius: 1, border: "1px solid" }}
+    >
       <TranslateIcon />
     </Stack>
   );

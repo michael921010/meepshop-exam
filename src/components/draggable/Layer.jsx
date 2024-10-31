@@ -30,9 +30,9 @@ const DragLayer = () => {
   function renderItem() {
     switch (itemType) {
       case ItemTypes.TEXT:
-        return <TextComponent />;
+        return <TextComponent sx={{ p: 2 }} />;
       case ItemTypes.IMAGE:
-        return <ImageComponent />;
+        return <ImageComponent sx={{ p: 2 }} />;
       default:
         return null;
     }

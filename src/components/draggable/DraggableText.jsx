@@ -33,7 +33,7 @@ const DraggableText = ({ disabled = false }) => {
         }),
       }}
     >
-      <TextComponent />
+      <TextComponent sx={{ p: 2 }} />
     </Box>
   );
 };

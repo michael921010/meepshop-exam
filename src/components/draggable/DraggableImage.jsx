@@ -33,7 +33,7 @@ const DraggableImage = ({ disabled = false }) => {
         }),
       }}
     >
-      <ImageComponent />
+      <ImageComponent sx={{ p: 2 }} />
     </Box>
   );
 };

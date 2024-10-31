@@ -1,15 +1,14 @@
-import { useCallback, useRef } from "react";
-import { Box, Stack, TextField, ButtonBase, styled } from "@mui/material";
+import { useCallback } from "react";
+import { Box, Stack, styled } from "@mui/material";
 import MuiIconButton from "@mui/material/IconButton";
 import CancelIcon from "@mui/icons-material/Cancel";
-import ImageIcon from "@mui/icons-material/Image";
 import { useDrop } from "react-dnd";
 import { ItemTypes } from "@/configs/drag-items";
 import { ImageModel, TextModel } from "@/modules/model";
-import { Image } from "@/components/common";
 import { Card, CardImage, CardText } from "./Card";
+import { usePage } from "./context";
 
-const IconButton = styled(MuiIconButton)(({ theme }) => ({
+const IconButton = styled(MuiIconButton)(() => ({
   position: "absolute",
   right: 0,
   top: 0,
@@ -18,13 +17,13 @@ const IconButton = styled(MuiIconButton)(({ theme }) => ({
   padding: 0,
 }));
 
-export default function ImageList({ images, model, onMove, onRemove, onChange }) {
-  const fileRef = useRef();
+export default function ImageList() {
+  const { state, dispatch } = usePage();
 
   const [{ isOver, canDrop }, dropRef] = useDrop(() => ({
     accept: [ItemTypes.TEXT, ItemTypes.IMAGE],
     drop: (item) => {
-      onMove(item.type);
+      dispatch({ type: "move_model", slug: item.type });
     },
     // canDrop: (item) => item.columnIndex !== columnIndex,
     collect: (monitor) => ({
@@ -35,33 +34,9 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
 
   const handleRemove = useCallback(
     (type) => () => {
-      onRemove?.(type);
+      dispatch({ type: "remove_model", slug: type });
     },
-    [onRemove]
-  );
-
-  const handleText = useCallback(
-    (evt) => {
-      const val = evt.target.value;
-      onChange?.(ItemTypes.TEXT, val);
-    },
-    [onChange]
-  );
-
-  const handleImage = useCallback(
-    (evt) => {
-      const filePath = fileRef.current?.value;
-
-      // const folderPath = filePath.match(/(.*)[\/\\]/)?.[1] || "";
-      const file = evt.target.files?.[0];
-
-      if (file) {
-        onChange?.(ItemTypes.IMAGE, file);
-      }
-
-      fileRef.current.value = "";
-    },
-    [onChange]
+    [dispatch]
   );
 
   return (
@@ -85,77 +60,100 @@ export default function ImageList({ images, model, onMove, onRemove, onChange })
       }}
     >
       <Stack direction="row" spacing={2}>
-        {images?.map((_card, i) => {
+        {state.images?.map((_card, i) => {
           const { image, text } = _card;
 
           return (
             <Card key={i}>
-              {image?.enabled && <CardImage width={image?.width} height={image?.height} src={image?.src} enabled />}
+              {image?.enabled && (
+                <CardImage
+                  width={image?.width}
+                  height={image?.height}
+                  src={image?.src}
+                  onChange={(model) =>
+                    dispatch({
+                      type: "update_card_in_image_list",
+                      index: i,
+                      slug: ItemTypes.IMAGE,
+                      model,
+                    })
+                  }
+                />
+              )}
 
-              {text?.enabled && <CardText width={text?.width} height={text?.height} src={text?.src} enabled />}
+              {text?.enabled && (
+                <CardText
+                  width={text?.width}
+                  height={text?.height}
+                  src={text?.src}
+                  onChange={(model) =>
+                    dispatch({
+                      type: "update_card_in_image_list",
+                      index: i,
+                      slug: ItemTypes.TEXT,
+                      model,
+                    })
+                  }
+                />
+              )}
             </Card>
           );
         })}
 
-        {!model?.image?.enabled && !model?.text?.enabled && isOver && canDrop && (
+        {!state.model?.image?.enabled && !state.model?.text?.enabled && isOver && canDrop && (
           <Card>
-            <CardImage width={ImageModel._width} height={ImageModel._height} />
+            <CardImage width={ImageModel._width} height={ImageModel._height} empty />
 
-            <CardText width={TextModel._width} height={TextModel._height} />
+            <CardText width={TextModel._width} height={TextModel._height} empty />
           </Card>
         )}
 
-        {(model?.image?.enabled || model?.text?.enabled) && (
+        {(state.model?.image?.enabled || state.model?.text?.enabled) && (
           <Card>
-            {model?.image?.enabled ? (
-              <Box width={model?.image?.width} height={model?.image?.height} position="relative">
+            {state.model?.image?.enabled ? (
+              <Box width={state.model?.image?.width} height={state.model?.image?.height} position="relative">
                 <IconButton onClick={handleRemove(ItemTypes.IMAGE)}>
                   <CancelIcon />
                 </IconButton>
 
-                <ButtonBase
-                  component="label"
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 1,
-                    bgcolor: "grey.200",
-                  }}
-                >
-                  <input ref={fileRef} hidden type="file" accept="image/*" onChange={handleImage} />
-
-                  {model?.image?.src === null ? (
-                    <ImageIcon />
-                  ) : (
-                    <Image
-                      alt=""
-                      src={model?.image?.src}
-                      width="100%"
-                      height="100%"
-                      sx={{ width: "100%", height: "100%", objectFit: "contain" }}
-                    />
-                  )}
-                </ButtonBase>
+                <CardImage
+                  width={state.model?.image?.width}
+                  height={state.model?.image?.height}
+                  src={state.model?.image?.src}
+                  onChange={(model) =>
+                    dispatch({
+                      type: "update_model",
+                      slug: ItemTypes.IMAGE,
+                      model,
+                    })
+                  }
+                />
               </Box>
             ) : (
-              <CardImage width={ImageModel._width} height={ImageModel._height} />
+              <CardImage width={ImageModel._width} height={ImageModel._height} empty />
             )}
 
-            {model?.text?.enabled ? (
-              <Box width={model?.text?.width} height={model?.text?.height} position="relative">
+            {state.model?.text?.enabled ? (
+              <Box width={state.model?.text?.width} height={state.model?.text?.height} position="relative">
                 <IconButton onClick={handleRemove(ItemTypes.TEXT)}>
                   <CancelIcon />
                 </IconButton>
 
-                <TextField
-                  size="small"
-                  placeholder="Please write down some text."
-                  value={model?.text?.src ?? ""}
-                  onChange={handleText}
+                <CardText
+                  width={state.model?.text?.width}
+                  height={state.model?.text?.height}
+                  src={state.model?.text?.src}
+                  onChange={(model) =>
+                    dispatch({
+                      type: "update_model",
+                      slug: ItemTypes.TEXT,
+                      model,
+                    })
+                  }
                 />
               </Box>
             ) : (
-              <CardText width={TextModel._width} height={TextModel._height} />
+              <CardText width={TextModel._width} height={TextModel._height} empty />
             )}
           </Card>
         )}
