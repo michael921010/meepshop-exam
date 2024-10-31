@@ -3,10 +3,10 @@ import { Box } from "@mui/material";
 import { useDrag } from "react-dnd";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { ItemTypes } from "@/configs/drag-items";
-import { ImageModel } from "@/components/draggable";
+import { ImageComponent } from "@/components/draggable";
 
-const DraggableImage = () => {
-  const [{}, dragRef, preview] = useDrag(
+const DraggableImage = ({ disabled = false }) => {
+  const [_, dragRef, preview] = useDrag(
     () => ({
       type: ItemTypes.IMAGE,
       item: { type: ItemTypes.IMAGE },
@@ -22,8 +22,18 @@ const DraggableImage = () => {
   }, [preview]);
 
   return (
-    <Box ref={dragRef} sx={{ cursor: "pointer" }}>
-      <ImageModel />
+    <Box
+      ref={dragRef}
+      sx={{
+        cursor: "move",
+
+        ...(disabled && {
+          pointerEvents: "none",
+          opacity: 0.2,
+        }),
+      }}
+    >
+      <ImageComponent />
     </Box>
   );
 };

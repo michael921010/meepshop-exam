@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 
-const ImageModel = () => {
+const ImageComponent = () => {
   return (
     <Stack
       width="100%"
@@ -16,4 +16,4 @@ const ImageModel = () => {
   );
 };
 
-export default ImageModel;
+export default ImageComponent;

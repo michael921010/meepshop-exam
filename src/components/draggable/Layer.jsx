@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useDragLayer } from "react-dnd";
 import { ItemTypes } from "@/configs/drag-items";
-import { ImageModel, TextModel } from "@/components/draggable";
+import { ImageComponent, TextComponent } from "@/components/draggable";
 
 function getItemStyles(initialOffset, currentOffset) {
   if (!initialOffset || !currentOffset) {
@@ -30,9 +30,9 @@ const DragLayer = () => {
   function renderItem() {
     switch (itemType) {
       case ItemTypes.TEXT:
-        return <TextModel />;
+        return <TextComponent />;
       case ItemTypes.IMAGE:
-        return <ImageModel />;
+        return <ImageComponent />;
       default:
         return null;
     }
