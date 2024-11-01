@@ -1,4 +1,18 @@
-# React + Vite
+## Install packages
+
+```sh
+yarn install
+```
+
+## Run application on localhost
+
+```sh
+yarn dev
+```
+
+Then you can open [http://localhost:5173/](http://localhost:5173/) in your browser.
+
+## Others - React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
