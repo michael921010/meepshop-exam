@@ -14,6 +14,9 @@ yarn dev
 
 Then you can open [http://localhost:5173/](http://localhost:5173/) in your browser.
 
+- [Home Page](http://localhost:5173/)
+- [WYSIWYG Editor Page](http://localhost:5173/editor)
+
 ## Others - React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
