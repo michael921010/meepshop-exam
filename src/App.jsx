@@ -10,7 +10,7 @@ export default function App() {
     <Router>
       <Suspense
         fallback={
-          <Stack width="100dvw" height="90dvh" alignItems="center" justifyContent="center">
+          <Stack width="100dvw" height="100dvh" alignItems="center" justifyContent="center">
             <CircularProgress />
           </Stack>
         }
